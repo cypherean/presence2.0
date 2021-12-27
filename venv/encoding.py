@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 import face_recognition
 from datetime import datetime
+import pickle
 
 path = "data/dataset"
 images = []
@@ -38,7 +39,9 @@ def findEncodings(images):
 def storeEncodings():
     encodeList = findEncodings(images)
     for name, encode in zip(classNames, encodeList):
-        np.save(f"data/encoding/{name}.npy", encode)
+        with open(f'data/encoding/{name}.pkl', "wb") as output:
+        # np.save(f"data/encoding/{name}.npy", encode)
+            pickle.dump(encode, output, pickle.HIGHEST_PROTOCOL)
 
 
 storeEncodings()
