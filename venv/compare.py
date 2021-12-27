@@ -26,20 +26,7 @@ def findEncodings():
 
 
 def markPresence(name):
-    with open("data/attendance.csv", "r+") as f:
-        myDataList = f.readlines()
-        nameList = []
-        for line in myDataList:
-            entry = line.split(",")
-            nameList.append(entry[0])
-        if name not in nameList:
-            now = datetime.now()
-            dtString = now.strftime("%H:%M:%S")
-            f.writelines(f"\n{name},{dtString}")
-        if name in nameList:
-            update.UpdatePresence(name)
-        print(myDataList)
-
+    update.UpdatePresence(name)
 
 findEncodings()
 print("Encoding complete")
@@ -63,19 +50,19 @@ while True:
         faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
         matchIndex = np.argmin(faceDis)
 
-        if (faceDis[matchIndex] < 0.4) and matches[matchIndex]:
+        if (faceDis[matchIndex] < 0.5) and matches[matchIndex]:
             name = classNames[matchIndex]
             markPresence(name)
-            print(faceDis[matchIndex])
-            print(name)
+            # print(faceDis[matchIndex])
+            # print(name)
 
 # cap.release()
 # cv2.destroyAllWindows()
-        # y1, x1, y2, x2 = faceLoc
-        # y1, x1, y2, x2 = y1*4, x1*4, y2*4, x2*4
-        # cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        # cv2.rectangle(img, (x1, y2-35), (x2,y2), (0,255,0), cv2.FILLED)
-        # cv2.putText(img, name, (x2-6, y2-6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
+            # y1, x1, y2, x2 = faceLoc
+            # y1, x1, y2, x2 = y1*4, x1*4, y2*4, x2*4
+    #         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    #         cv2.rectangle(img, (x1, y2-35), (x2,y2), (0,255,0), cv2.FILLED)
+    #         cv2.putText(img, name, (x2-6, y2-6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
 
     # cv2.imshow("Webcam", img)
     # cv2.waitKey(1)

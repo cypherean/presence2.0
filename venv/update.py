@@ -1,27 +1,10 @@
-from tempfile import NamedTemporaryFile
-import shutil
-import csv
+import pymongo
 from datetime import datetime
 
-from cv2 import namedWindow
-
+myclient = pymongo.MongoClient("mongodb://localhost:27017/")
 
 def UpdatePresence(name):
-
-    filename = "data/attendance.csv"
-    tempfile = NamedTemporaryFile(mode="w", delete=False)
-
-    fields = ["Name", "Time"]
-
-    with open(filename, "r") as csvfile, tempfile:
-        reader = csv.DictReader(csvfile, fieldnames=fields)
-        writer = csv.DictWriter(tempfile, fieldnames=fields)
-        for row in reader:
-            if row["Name"] == str(name):
-                now = datetime.now()
-                dtString = now.strftime("%H:%M:%S")
-                row["Name"], row["Time"] = name, dtString
-            row = {"Name": row["Name"], "Time": row["Time"]}
-            writer.writerow(row)
-
-    shutil.move(tempfile.name, filename)
+    now = datetime.now()
+    dtString = now.strftime("%H:%M:%S")
+    mydb = myclient["test"]
+    mydb.sdsPresence.find_one_and_update({"name": name}, {"$set": {"time": dtString}}, upsert=True)

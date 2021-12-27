@@ -1,22 +1,44 @@
-from os import path
+from os import PRIO_PGRP, path
 import os
 import cv2
 import numpy as np
 import face_recognition
-from face_recognition.api import face_distance, face_locations
 from datetime import datetime
+import pickle
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score
+from sklearn.pipeline import make_pipeline
 
-# path = "ImagesAttendance"
-# images = []
-# classNames = []
-# myList = os.listdir(path)
+clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
 
-# for cl in myList:
-#     curImg = cv2.imread(f"{path}/{cl}")
-#     images.append(curImg)
-#     classNames.append(os.path.splitext(cl)[0])
+path = "data/images"
+images = []
+classNames = []
+myList = os.listdir(path)
 
-# print("File Read")
+for _, dirs, _ in os.walk(path):
+    for dir in dirs:
+        print(dir)
+        for _, _, files in os.walk(os.path.join(path,dir)):
+            for cl in files:
+                # print(cl)
+                curImg = cv2.imread(str(os.path.join(path,dir,cl))+".jpeg")
+                print(curImg)
+                images.append(curImg)
+                classNames.append(str(dir))
+print(images)
+
+print("Folder Read")
+
+# def getEncodingLen():
+#     with open("data/attendance.csv", "r") as f:
+#         myDataList = f.readlines()
+#     return len(myDataList)
+
+# if (len(myList) != (getEncodingLen()-1)):
+#     print('unequal')
+
 
 # def findEncodings(images):
 #     encodeList = []
@@ -26,18 +48,17 @@ from datetime import datetime
 #         encodeList.append(encode)
 #     return encodeList
 
-def en():
-    encodeList = []
-    with open("data/encoding.csv", "r") as f:
-        myDataList = f.readlines()
-        for line in myDataList:
-            entry = line.split(",")
-            print(entry[1])
-            # encodeList.append(entry[0])
-    return encodeList
 
-# output1 = findEncodings(images)
-# print(output1)
+# def storeEncodings():
+#     encodeList = findEncodings(images)
+#     print(cross_val_score(clf, np.array(encodeList), np.array(classNames), cv=5, scoring='accuracy_score'))
 
-output2 = en()
-print(output2)
+#     clf.fit(np.array(encodeList), np.array(classNames))
+#     with open(f'data/encoding/clf.pkl', "wb") as output:
+#     # np.save(f"data/encoding/{name}.npy", encode)
+#         pickle.dump(clf, output, pickle.HIGHEST_PROTOCOL)
+
+
+# storeEncodings()
+
+#print("Encoding Done")
