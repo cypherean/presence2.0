@@ -1,10 +1,10 @@
 import pymongo
 from datetime import datetime
 
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+myclient = pymongo.MongoClient("")
 
 def UpdatePresence(name):
     now = datetime.now()
-    dtString = now.strftime("%H:%M:%S")
-    mydb = myclient["test"]
-    mydb.sdsPresence.find_one_and_update({"name": name}, {"$set": {"time": dtString}}, upsert=True)
+    dtString = now.strftime("%m-%d-%y %H:%M:%S")
+    mydb = myclient["SDSBot"]
+    mydb.sdsPresence.find_one_and_update({"Name": name}, {"$set": {"Time": dtString}}, upsert=True)

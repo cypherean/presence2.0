@@ -19,7 +19,7 @@ def findEncodings():
     myList = os.listdir(path)
 
     for cl in myList:
-        with open(f'{path}/{cl}', 'rb') as input:
+        with open(f"{path}/{cl}", "rb") as input:
             curEnc = pickle.load(input)
         encodeListKnown.append(curEnc)
         classNames.append(os.path.splitext(cl)[0])
@@ -27,6 +27,7 @@ def findEncodings():
 
 def markPresence(name):
     update.UpdatePresence(name)
+
 
 findEncodings()
 print("Encoding complete")
@@ -40,7 +41,7 @@ while True:
     success, img = cap.read()
     # cap.release()
     # reduce img size
-    img = cv2.resize(img, None, fx = 0.5, fy = 0.5, interpolation=cv2.INTER_AREA)
+    img = cv2.resize(img, None, fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA)
     # imga = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     faceLocCurFrame = face_recognition.face_locations(img)
     encodeCurFrame = face_recognition.face_encodings(img, faceLocCurFrame)
@@ -50,22 +51,23 @@ while True:
         faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
         matchIndex = np.argmin(faceDis)
 
-        if (faceDis[matchIndex] < 0.5) and matches[matchIndex]:
+        if (faceDis[matchIndex] < 0.43) and matches[matchIndex]:
             name = classNames[matchIndex]
             markPresence(name)
+            print(name)
             # print(faceDis[matchIndex])
             # print(name)
 
-# cap.release()
-# cv2.destroyAllWindows()
-            # y1, x1, y2, x2 = faceLoc
-            # y1, x1, y2, x2 = y1*4, x1*4, y2*4, x2*4
+    # cap.release()
+    # cv2.destroyAllWindows()
+    # y1, x1, y2, x2 = faceLoc
+    # y1, x1, y2, x2 = y1*4, x1*4, y2*4, x2*4
     #         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
     #         cv2.rectangle(img, (x1, y2-35), (x2,y2), (0,255,0), cv2.FILLED)
     #         cv2.putText(img, name, (x2-6, y2-6), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 255, 255), 2)
 
     # cv2.imshow("Webcam", img)
     # cv2.waitKey(1)
-    # time.sleep(3)
+    time.sleep(1)
 
 # print(len(encodeListKnown))
